@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8"><title>Core Client</title>
+<style>
+:root{--bg:#0a0b10;--p:#10131b;--p2:#161a25;--l:#252b3b;--tx:#f2f3f7;--mu:#8a90a5;--ac:#ff8a1f;--ac2:#ffc21f;--ok:#4ade80;--er:#f87171}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px 'Segoe UI',system-ui,sans-serif;overflow:hidden;position:relative;user-select:none}
+.bg{position:absolute;inset:-10%;background:radial-gradient(ellipse at 18% 88%,#4a2a18 0,transparent 42%),radial-gradient(ellipse at 82% 50%,#16265a 0,transparent 52%),radial-gradient(ellipse at 50% 0,#2a1020 0,transparent 50%);animation:drift 24s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(2%,-2%) scale(1.06)}}
+@media (prefers-reduced-motion:reduce){.bg{animation:none}}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.glass{background:rgba(16,19,27,.82);border:1px solid var(--l);border-radius:10px;backdrop-filter:blur(8px)}
+.glass:hover{border-color:#3a4258}
+.view{position:absolute;inset:0;display:none}.view.on{display:block}
+.logo{font:900 58px 'Courier New',monospace;color:var(--ac);border:4px solid var(--ac);padding:2px 16px;letter-spacing:5px;position:relative;display:inline-block}
+.logo::before{content:"";position:absolute;left:50%;top:-22px;width:6px;height:14px;background:var(--ac2);transform:translateX(-50%)}
+/* login */
+#login .box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:400px;max-width:92vw;text-align:center}
+#login .logo{margin-bottom:30px}
+.big{width:100%;height:58px;border-radius:8px;border:1px solid var(--l);background:var(--p);font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
+.big:hover{border-color:var(--ac)}
+.big.ms{background:#fff;color:#111;border-color:#fff}.big.ms:hover{background:#eee}
+.ms4{width:20px;height:20px;display:grid;grid-template:1fr 1fr/1fr 1fr;gap:2px}.ms4 i{background:#f25022}.ms4 i:nth-child(2){background:#7fba00}.ms4 i:nth-child(3){background:#00a4ef}.ms4 i:nth-child(4){background:#ffb900}
+.off{display:flex;gap:8px;margin-bottom:12px}.off input{flex:1}
+input[type=text],input[type=search],select{background:var(--bg);color:var(--tx);border:1px solid var(--l);border-radius:8px;padding:11px 12px;font:inherit;user-select:text}
+.accs{margin-top:22px;text-align:left}.accs h4{margin:0 0 8px;color:var(--mu);font-weight:500;font-size:13px}
+.acc{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--l);border-radius:8px;background:var(--p);margin-bottom:8px;width:100%;text-align:left}
+.acc:hover,.acc.cur{border-color:var(--ac)}
+.av{width:36px;height:36px;border-radius:6px;display:grid;place-items:center;font-weight:700;color:#111;flex:none;overflow:hidden;background-size:cover}
+.av img{width:100%;height:100%;image-rendering:pixelated}
+.acc small{color:var(--mu);display:block;font-size:12px}.acc .x{margin-left:auto;background:none;border:0;color:var(--mu);font-size:18px;padding:2px 6px}.acc .x:hover{color:var(--er)}
+.err{color:var(--er);min-height:20px;font-size:13px;margin-top:6px}
+/* home */
+#discord{position:absolute;left:12px;top:12px;display:flex;gap:10px;align-items:center;padding:9px 14px;font-size:13px}
+#discord small{display:block;color:var(--mu);font-size:11px}
+#top{position:absolute;right:14px;top:12px;display:flex;gap:10px;align-items:center}
+#top .ic{height:46px;min-width:46px;padding:0 13px;font-size:18px}
+#me{display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;font-weight:700;font-size:13px;letter-spacing:.5px}
+#me .av{width:28px;height:28px}
+#center{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);width:344px;display:flex;flex-direction:column;gap:11px;align-items:center}
+#center .logo{margin-bottom:26px}
+.m{width:100%;height:58px;border-radius:7px;font-weight:500;font-size:16px;display:flex;align-items:center;justify-content:center;gap:12px}
+.m.play{height:74px;background:linear-gradient(90deg,#ff7a1a,#8a3f10);border:1px solid var(--ac);font-weight:800;font-size:22px;letter-spacing:1px;flex-direction:column;gap:0;line-height:1.2}
+.m.play small{font-weight:500;font-size:12px;opacity:.85;letter-spacing:0}
+.m.play:hover{filter:brightness(1.12)}
+.m.play[disabled]{filter:grayscale(.7);cursor:wait}
+#quit{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);width:266px;height:56px;background:#2a1d17;border:0;border-radius:6px;color:var(--ac);font:700 19px 'Segoe UI'}
+#quit:hover{background:#3a261b}
+#ver{position:absolute;left:0;right:0;bottom:22px;text-align:center;color:var(--mu);font-size:14px}
+#promo{position:absolute;left:12px;bottom:12px;width:300px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:4px}
+#promo .art{font:900 34px 'Courier New',monospace;color:var(--ac);margin:18px 0 20px}
+#promo em{color:var(--ac);font:600 11px 'Segoe UI';letter-spacing:2px;font-style:normal}
+#promo h3{margin:0 0 8px;font-size:19px}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:10px;font-weight:600;width:100%}.btn:hover{filter:brightness(1.1)}
+#upd{position:absolute;right:12px;bottom:12px;width:306px;height:172px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#ff8a1f,#c85000);display:grid;place-items:center;font:900 34px 'Segoe UI';color:#fff}
+#upd small{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;background:rgba(0,0,0,.6);font-size:13px;font-weight:600}
+/* status bar */
+#bar{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);width:420px;max-width:90vw;padding:12px 16px;display:none;z-index:4}
+#bar.on{display:block}#bar span{font-size:13px;color:var(--mu)}
+#bar .t{height:6px;background:var(--bg);border-radius:3px;margin-top:8px;overflow:hidden}#bar .t i{display:block;height:100%;width:0;background:var(--ac);transition:width .2s}
+/* panels */
+#ov{position:absolute;inset:0;background:rgba(0,0,0,.66);display:none;align-items:center;justify-content:center;z-index:6}
+#ov.on{display:flex}
+#win{width:min(620px,94vw);max-height:84vh;display:flex;flex-direction:column;background:var(--p);border:1px solid var(--l);border-radius:12px}
+#win header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--l);font-weight:700;font-size:18px}
+#win header button{background:none;border:0;font-size:24px;color:var(--mu)}
+#body{padding:18px 20px;overflow:auto}
+.row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}
+.row small{display:block;color:var(--mu);font-size:12px}
+.k{background:none;border:1px solid var(--ac);color:var(--ac);border-radius:6px;padding:7px 14px;min-width:78px}.k:hover,.k.on{background:var(--ac);color:#111}
+.seg{display:flex;gap:6px;margin-bottom:12px}.seg button{flex:1;padding:10px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}.seg button.on{border-color:var(--ac);color:var(--ac)}
+.sw{appearance:none;width:42px;height:24px;border-radius:12px;background:var(--l);position:relative;cursor:pointer;flex:none;border:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s}
+.sw:checked{background:var(--ac)}.sw:checked::after{transform:translateX(18px)}
+input[type=range]{accent-color:var(--ac);width:200px}
+.vl{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:12px}
+.vl button{padding:10px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}.vl button.on{border-color:var(--ac);color:var(--ac);background:#2a1a0c}
+.warn{padding:10px 12px;border-radius:8px;background:#3a1a1a;border:1px solid #6a2a2a;margin-bottom:12px;font-size:13px}
+pre{margin:0;max-height:48vh;overflow:auto;font-size:12px;color:var(--mu);background:var(--bg);padding:10px;border-radius:8px;white-space:pre-wrap;user-select:text}
+#toast{position:absolute;left:50%;top:70px;transform:translateX(-50%);background:var(--p2);border:1px solid var(--ac);padding:10px 18px;border-radius:8px;display:none;z-index:9;font-size:14px}
+</style></head><body>
+<div class="bg"></div>
+
+<div class="view" id="login"><div class="box">
+ <div class="logo">CORE</div>
+ <button class="big ms" id="lms"><span class="ms4"><i></i><i></i><i></i><i></i></span><span data-t="msLogin"></span></button>
+ <div class="off"><input type="text" id="lnick" maxlength="16" data-p="nick" autocomplete="off"><button class="k" id="loff" data-t="offline"></button></div>
+ <div class="err" id="lerr"></div>
+ <div class="accs" id="laccs"></div>
+</div></div>
+
+<div class="view" id="home">
+ <button class="glass" id="discord"><span>💬</span><div><span data-t="discord"></span><small id="dlink"></small></div></button>
+ <div id="top">
+  <button class="glass ic" id="logb" title="Logi">🗒</button>
+  <button class="glass ic" data-w="mods" title="Mody">▦</button>
+  <button class="glass ic" data-w="binds" title="Bindy">⌨</button>
+  <button class="glass ic" data-w="settings" title="Ustawienia">⚙</button>
+  <button class="glass ic" data-w="partners" title="Partnerzy">★</button>
+  <button class="glass ic" id="lang">PL</button>
+  <button class="glass" id="me"></button>
+ </div>
+ <div id="center">
+  <div class="logo">CORE</div>
+  <button class="m play" id="play"><span data-t="play"></span><small id="pinfo"></small></button>
+  <button class="m glass" data-w="versions">👥&nbsp;<span data-t="versions"></span></button>
+  <button class="m glass" data-w="mods">▦&nbsp;<span data-t="mods"></span></button>
+  <button class="m glass" data-w="partners">★&nbsp;<span data-t="partners"></span></button>
+ </div>
+ <div class="glass" id="promo"><div class="art">DC</div><em data-t="partnerTag"></em><h3>Depresja Client</h3><button class="btn" data-w="partners" data-t="view"></button></div>
+ <div id="upd">+FPS<small>Core Performance Update 1</small></div>
+ <button id="quit" data-t="quit"></button>
+ <div id="ver"></div>
+ <div class="glass" id="bar"><span id="bt"></span><div class="t"><i id="bp"></i></div></div>
+</div>
+
+<div id="ov"><div id="win"><header><span id="wt"></span><button id="x" aria-label="close">×</button></header><div id="body"></div></div></div>
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const L={pl:{msLogin:'Zaloguj przez Microsoft',offline:'Gra offline',nick:'Nick do gry offline',saved:'Zapisane konta',discord:'Dołącz na Discord',play:'GRAJ',versions:'Wersje',mods:'Mody',binds:'Bindy',settings:'Ustawienia',partners:'Partnerzy',partnerTag:'PARTNER',view:'Zobacz',quit:'ZAMKNIJ',accounts:'Konta',addMs:'Dodaj konto Microsoft',addOff:'Dodaj konto offline',ram:'Pamięć RAM',full:'Pełny ekran',jvm:'Argumenty JVM',hide:'Ukryj launcher podczas gry',dlink:'Link do Discorda',vtext:'Tekst wersji w menu gry',folder:'Folder gry',modsFolder:'Otwórz folder modów',loader:'Silnik',search:'Szukaj wersji',fabricNote:'Fabric: wrzuć pliki .jar do folderu modów. Od 1.14 Fabric, starsze wersje (1.8.9, 1.12.2...) przez Legacy Fabric.',vanilla:'Vanilla',hud:'Moduły HUD',bindHint:'Kliknij przycisk i naciśnij klawisz',logs:'Logi',noLogs:'Brak logów.',javaBad:'Wymagana Java ',javaNone:'Nie znaleziono Javy. Zainstaluj Javę ',javaFound:'Masz Javę ',active:'Aktywne',logout:'Usuń',partnerText:'Oficjalny partner Core Client. Wspólne serwery, eventy i kosmetyki.',started:'Gra zamknięta',pick:'Wybierz wersję'},
+en:{msLogin:'Sign in with Microsoft',offline:'Play offline',nick:'Offline nickname',saved:'Saved accounts',discord:'Join our Discord',play:'PLAY',versions:'Versions',mods:'Mods',binds:'Keybinds',settings:'Settings',partners:'Partners',partnerTag:'PARTNER',view:'View',quit:'QUIT',accounts:'Accounts',addMs:'Add Microsoft account',addOff:'Add offline account',ram:'Memory (RAM)',full:'Fullscreen',jvm:'JVM arguments',hide:'Hide launcher while playing',dlink:'Discord link',vtext:'Version text in game menu',folder:'Game folder',modsFolder:'Open mods folder',loader:'Loader',search:'Search versions',fabricNote:'Fabric: put .jar files in the mods folder. Fabric from 1.14, older versions (1.8.9, 1.12.2...) via Legacy Fabric.',vanilla:'Vanilla',hud:'HUD modules',bindHint:'Click a button and press a key',logs:'Logs',noLogs:'No logs yet.',javaBad:'Java required: ',javaNone:'Java not found. Install Java ',javaFound:'You have Java ',active:'Active',logout:'Remove',partnerText:'Official Core Client partner. Shared servers, events and cosmetics.',started:'Game closed',pick:'Pick a version'}};
+let ST=null,list=[],logs=[],busy=false,wait=null,cur=null,q='';
+const t=k=>(L[ST?ST.settings.lang:'pl']||L.pl)[k]||k;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const e=$('#toast');e.textContent=m;e.style.display='block';clearTimeout(e.h);e.h=setTimeout(()=>e.style.display='none',3200)}
+const hue=n=>[...n].reduce((a,c)=>a+c.charCodeAt(0)*7,0)%360;
+const av=n=>`<span class="av" style="background:hsl(${hue(n)} 70% 62%)"><img src="https://mc-heads.net/avatar/${encodeURIComponent(n)}/36" alt="" onerror="this.remove()">${esc(n[0].toUpperCase())}</span>`;
+const set=async p=>{ST=await core.settings(p)};
+const active=()=>ST.accounts.find(a=>a.id===ST.active);
+
+function accList(sel){return ST.accounts.map(a=>`<button class="acc ${a.id===ST.active?'cur':''}" data-sel="${esc(a.id)}">${av(a.name)}<span><b>${esc(a.name)}</b><small>${a.type==='ms'?'Microsoft':'Offline'}</small></span><span class="x" data-rm="${esc(a.id)}" title="${t('logout')}">×</span></button>`).join('')}
+
+function render(){
+  if(!ST)return;
+  document.documentElement.lang=ST.settings.lang;
+  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));
+  document.querySelectorAll('[data-p]').forEach(e=>e.placeholder=t(e.dataset.p));
+  $('#lang').textContent=ST.settings.lang.toUpperCase();
+  const logged=!!active();
+  $('#login').classList.toggle('on',!logged);$('#home').classList.toggle('on',logged);
+  $('#laccs').innerHTML=ST.accounts.length?`<h4>${t('saved')}</h4>`+accList():'';
+  if(logged){const a=active();$('#me').innerHTML=av(a.name)+esc(a.name.toUpperCase());
+    const s=ST.settings;$('#pinfo').textContent=(s.version||'—')+' · '+(s.loader==='fabric'?'Fabric':'Vanilla');
+    $('#ver').textContent='Core Client 0.3.1 ('+(s.version||'—')+')';$('#dlink').textContent=s.discord.replace('https://','');}
+  $('#play').disabled=busy;
+}
+async function run(f){try{ST=await f();render();return true}catch(e){const m=String(e.message||e).replace(/^Error invoking remote method '[^']+': (Error: )?/,'');($('#login').classList.contains('on')?$('#lerr').textContent=m:toast(m));return false}}
+
+/* login */
+$('#lms').onclick=()=>run(core.loginMs);
+$('#loff').onclick=async()=>{$('#lerr').textContent='';if(await run(()=>core.loginOffline($('#lnick').value)))$('#lnick').value=''};
+$('#lnick').onkeydown=e=>{if(e.key==='Enter')$('#loff').click()};
+
+/* panels */
+function openPanel(n){cur=n;wait=null;$('#wt').textContent=t(n);$('#ov').classList.add('on');body(n)}
+function closePanel(){$('#ov').classList.remove('on');cur=null;wait=null;q=''}
+async function body(n){const s=ST.settings;let h='';
+ if(n==='versions'){
+  h=`<div class="seg"><button data-ld="vanilla" class="${s.loader==='vanilla'?'on':''}">${t('vanilla')}</button><button data-ld="fabric" class="${s.loader==='fabric'?'on':''}">Fabric</button></div>`+
+  (s.loader==='fabric'?`<div class="row"><small>${t('fabricNote')}</small></div>`:'')+
+  `<input type="search" id="q" placeholder="${t('search')}" value="${esc(q)}" style="width:100%"><div class="vl">${list.filter(v=>v.includes(q)).map(v=>`<button data-v="${v}" class="${v===s.version?'on':''}">${v}</button>`).join('')}</div>`;
+ }
+ if(n==='mods'){h=`<h4 style="margin:0 0 10px;color:var(--mu);font-weight:500">${t('hud')}</h4>`+Object.entries(s.mods).map(([k,v])=>`<div class="row"><b>${esc(k)}</b><input type="checkbox" class="sw" data-mod="${esc(k)}" ${v?'checked':''}></div>`).join('')+`<button class="btn" data-open="mods" style="margin-top:6px">${t('modsFolder')}</button>`}
+ if(n==='binds'){h=`<p style="color:var(--mu);margin-top:0">${t('bindHint')}</p>`+Object.entries(s.binds).map(([k,v])=>`<div class="row"><b>${esc(k)}</b><button class="k ${wait===k?'on':''}" data-bind="${esc(k)}">${wait===k?'...':esc(v)}</button></div>`).join('')}
+ if(n==='settings'){h=`<div class="row"><span>${t('ram')}: <b id="rv">${s.ram} GB</b></span><input type="range" id="ram" min="1" max="16" value="${s.ram}"></div>
+  <div class="row"><span>${t('full')}</span><input type="checkbox" class="sw" id="fs" ${s.fullscreen?'checked':''}></div>
+  <div class="row"><span>${t('hide')}</span><input type="checkbox" class="sw" id="hd" ${s.hide?'checked':''}></div>
+  <div class="row"><span>${t('jvm')}</span><input type="text" id="jvm" value="${esc(s.jvm)}" placeholder="-XX:+UseG1GC" style="width:240px"></div>
+  <div class="row"><span>${t('dlink')}</span><input type="text" id="dl" value="${esc(s.discord)}" style="width:240px"></div>
+  <div class="row"><span>${t('vtext')}</span><input type="text" id="vt" value="${esc(s.versionText)}" placeholder="Core Client ${esc(s.version||'')}" style="width:240px"></div>
+  <div class="row"><span>${t('accounts')}</span><span></span></div><div>${accList()}</div>
+  <button class="btn" id="addacc" style="margin:4px 0 8px">${t('addMs')}</button>
+  <button class="btn" data-open="root" style="background:var(--l)">${t('folder')}</button>`}
+ if(n==='partners'){h=`<div class="row"><div><b>Depresja Client</b><small>${t('partnerText')}</small></div><span style="font-size:22px">★</span></div>`}
+ if(n==='logs'){h=`<pre>${logs.length?esc(logs.slice(-300).join('\n')):t('noLogs')}</pre>`}
+ $('#body').innerHTML=h;
+ if(n==='versions'){const i=$('#q');i.oninput=()=>{q=i.value;const p=i.selectionStart;body('versions').then(()=>{const j=$('#q');j.focus();j.setSelectionRange(p,p)})}}
+ if(n==='settings'){
+  const sv=()=>set({ram:+$('#ram').value,fullscreen:$('#fs').checked,hide:$('#hd').checked,jvm:$('#jvm').value,versionText:$('#vt').value,discord:$('#dl').value.startsWith('https://')?$('#dl').value:ST.settings.discord});
+  $('#ram').oninput=()=>$('#rv').textContent=$('#ram').value+' GB';
+  ['#ram','#fs','#hd','#jvm','#dl','#vt'].forEach(i=>$(i).onchange=async()=>{await sv();render()});
+  $('#addacc').onclick=()=>{closePanel();ST.active=null;run(core.loginMs)};
+ }}
+$('#x').onclick=closePanel;
+$('#ov').onclick=e=>{if(e.target.id==='ov')closePanel()};
+
+document.addEventListener('click',async e=>{
+ const g=a=>e.target.closest(`[${a}]`);let b;
+ if(b=g('data-rm')){e.stopPropagation();await run(()=>core.remove(b.dataset.rm));if(cur==='settings')body('settings');return}
+ if(b=g('data-sel')){await run(()=>core.select(b.dataset.sel));if(cur)body(cur);return}
+ if(b=g('data-w')){openPanel(b.dataset.w);return}
+ if(b=g('data-v')){await set({version:b.dataset.v});render();body('versions');return}
+ if(b=g('data-ld')){await set({loader:b.dataset.ld});render();body('versions');return}
+ if(b=g('data-mod')){await set({mods:{...ST.settings.mods,[b.dataset.mod]:b.checked}});return}
+ if(b=g('data-bind')){wait=b.dataset.bind;body('binds');return}
+ if(b=g('data-open')){core.open(b.dataset.open);return}
+});
+addEventListener('keydown',async e=>{if(!wait)return;e.preventDefault();const k=e.key.length===1?e.key.toUpperCase():e.key;await set({binds:{...ST.settings.binds,[wait]:k}});wait=null;body('binds')});
+$('#logb').onclick=()=>openPanel('logs');
+$('#lang').onclick=async()=>{await set({lang:ST.settings.lang==='pl'?'en':'pl'});render();if(cur)openPanel(cur)};
+$('#discord').onclick=()=>core.url(ST.settings.discord);
+$('#me').onclick=()=>openPanel('settings');
+$('#quit').onclick=()=>window.close();
+
+/* play */
+$('#play').onclick=async()=>{
+ const s=ST.settings;if(!s.version){toast(t('pick'));openPanel('versions');return}
+ const j=await core.java(s.version);
+ if(!j.ok){toast(j.found?t('javaBad')+j.need+' ('+t('javaFound')+j.found+')':t('javaNone')+j.need);return}
+ busy=true;render();$('#bar').classList.add('on');$('#bt').textContent='...';$('#bp').style.width='5%';
+ try{await core.launch()}catch(e){busy=false;$('#bar').classList.remove('on');render();toast(String(e.message).replace(/^Error invoking remote method '[^']+': (Error: )?/,''))}
+};
+core.on('status',m=>{$('#bt').textContent=m});
+core.on('progress',p=>{if(p.total)$('#bp').style.width=Math.max(5,Math.round(p.task/p.total*100))+'%'});
+core.on('log',d=>{logs.push(String(d).trim());if(logs.length>1000)logs.shift();if(cur==='logs')body('logs')});
+core.on('closed',()=>{busy=false;$('#bar').classList.remove('on');render();toast(t('started'))});
+
+(async()=>{ST=await core.state();list=await core.versions();
+ if(!ST.settings.version)await set({version:list[0]});render()})();
+</script></body></html>
