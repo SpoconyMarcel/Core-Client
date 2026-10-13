@@ -16,6 +16,7 @@ public final class KeyUtil {
         switch (n) {
             case "Alt": return GLFW.GLFW_KEY_LEFT_ALT;
             case "Shift": return GLFW.GLFW_KEY_LEFT_SHIFT;
+            case "RShift": return GLFW.GLFW_KEY_RIGHT_SHIFT;
             case "Control": return GLFW.GLFW_KEY_LEFT_CONTROL;
             case "Tab": return GLFW.GLFW_KEY_TAB;
             case "CapsLock": return GLFW.GLFW_KEY_CAPS_LOCK;

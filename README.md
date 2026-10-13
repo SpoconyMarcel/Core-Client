@@ -57,3 +57,7 @@ GitHub Actions (`mod.yml`) buduje moda przy każdej zmianie w `mod/` i udostępn
 Mod nie był kompilowany przy pisaniu. Jeśli build zgłosi błąd nazwy klasy lub metody, to różnica w mapowaniach Yarn i wystarczy ją poprawić.
 
 Nie ma jeszcze: Freelook i moda Core dla wersji innych niż 1.21.11.
+
+## Menu modułów w grze i Modrinth
+- W grze prawy Shift (zmienisz w Bindy, pozycja „Menu Core") otwiera menu, w którym włączasz i wyłączasz moduły HUD (koordynaty, FPS, CPS, Keystrokes, Armor Status, Zoom, Toggle Sprint, Full Vision). Wybór zapisuje się w `config/coreclient-hud.json` i ma pierwszeństwo przed ustawieniami z launchera. Aby wrócić do ustawień z launchera, usuń ten plik.
+- W launcherze: Mody, zakładka Modrinth. Wyszukujesz mody pasujące do wybranej wersji gry (silnik Fabric), klikasz Zainstaluj i launcher pobiera plik razem z wymaganymi zależnościami, sprawdzając sumę SHA-512. Zakładka Zainstalowane pokazuje i usuwa pobrane mody.

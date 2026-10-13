@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, shell, safeStorage } = require('electron');
 const fs = require('fs'), path = require('path'), { execFile } = require('child_process');
 const { Client, Authenticator } = require('minecraft-launcher-core');
 const { Auth } = require('msmc');
+const crypto = require('crypto');
 
 const ROOT = path.join(app.getPath('appData'), '.coreclient');
 const DATA = path.join(app.getPath('userData'), 'core.json');
@@ -13,12 +14,13 @@ const defaults = () => ({
     version: null, loader: 'fabric', ram: 4, fullscreen: false, jvm: '', lang: 'pl',
     discord: 'https://discord.gg/', hide: true, versionText: '',
     mods: { FPS: true, CPS: true, Keystrokes: false, 'Armor Status': false, Zoom: true, 'Toggle Sprint': false, 'Full Vision': true, Koordynaty: true },
-    binds: { Zoom: 'C', 'Full Vision': 'V', 'Toggle Sprint': 'G', Freelook: 'Alt' }
+    binds: { 'Menu Core': 'RShift', Zoom: 'C', 'Full Vision': 'V', 'Toggle Sprint': 'G', Freelook: 'Alt' }
   }
 });
 function load() {
   const d = defaults();
-  try { const s = JSON.parse(fs.readFileSync(DATA, 'utf8')); return { ...d, ...s, settings: { ...d.settings, ...s.settings } }; }
+  try { const s = JSON.parse(fs.readFileSync(DATA, 'utf8')); const ss = s.settings || {};
+    return { ...d, ...s, settings: { ...d.settings, ...ss, mods: { ...d.settings.mods, ...ss.mods }, binds: { ...d.settings.binds, ...ss.binds } } }; }
   catch { return d; }
 }
 function save(d) { fs.mkdirSync(path.dirname(DATA), { recursive: true }); fs.writeFileSync(DATA, JSON.stringify(d, null, 2)); }
@@ -153,6 +155,52 @@ ipcMain.handle('launch', async () => {
     const proc = await launcher.launch(opts);
     if (!proc) throw new Error('Nie udało się uruchomić gry. Sprawdź Javę i logi.');
   } catch (e) { running = false; throw e; }
+});
+
+
+// ---------- Modrinth ----------
+const MR = 'https://api.modrinth.com/v2', UA = { headers: { 'User-Agent': 'CoreClient/0.4' } };
+const jget = async u => { const r = await fetch(u, UA); if (!r.ok) throw new Error('Modrinth: błąd ' + r.status); return r.json(); };
+const gameDir = s => path.join(ROOT, 'instances', `${s.version}-${s.loader}`);
+const modsDir = s => path.join(gameDir(s), 'mods');
+
+ipcMain.handle('mr:search', async (_e, query) => {
+  const s = load().settings;
+  if (s.loader !== 'fabric') throw new Error('Wybierz silnik Fabric (w Wersjach), żeby dodawać mody.');
+  const facets = JSON.stringify([['project_type:mod'], ['categories:fabric'], [`versions:${s.version}`]]);
+  const d = await jget(`${MR}/search?query=${encodeURIComponent(query || '')}&facets=${encodeURIComponent(facets)}&limit=20&index=downloads`);
+  return d.hits.map(h => ({ id: h.project_id, title: h.title, desc: h.description, icon: h.icon_url, downloads: h.downloads, author: h.author }));
+});
+
+async function installProject(id, s, seen = new Set()) {
+  if (seen.has(id)) return []; seen.add(id);
+  const q = `game_versions=${encodeURIComponent(JSON.stringify([s.version]))}&loaders=${encodeURIComponent('["fabric"]')}`;
+  const vs = await jget(`${MR}/project/${id}/version?${q}`);
+  if (!vs.length) throw new Error('Ten mod nie ma wersji dla ' + s.version);
+  const v = vs[0], f = v.files.find(x => x.primary) || v.files[0];
+  const dir = modsDir(s); fs.mkdirSync(dir, { recursive: true });
+  const isApi = /fabric-api/i.test(f.filename), have = fs.readdirSync(dir);
+  const out = [];
+  if (!(isApi && have.some(x => /fabric-api/i.test(x))) && !have.includes(f.filename)) {
+    const buf = Buffer.from(await (await fetch(f.url, UA)).arrayBuffer());
+    if (f.hashes && f.hashes.sha512 && crypto.createHash('sha512').update(buf).digest('hex') !== f.hashes.sha512) throw new Error('Plik uszkodzony (zła suma SHA-512)');
+    fs.writeFileSync(path.join(dir, f.filename), buf);
+    out.push(f.filename);
+  }
+  for (const dep of v.dependencies || []) {
+    if (dep.dependency_type === 'required' && dep.project_id) { try { out.push(...await installProject(dep.project_id, s, seen)); } catch {} }
+  }
+  return out;
+}
+ipcMain.handle('mr:install', (_e, id) => installProject(String(id), load().settings));
+ipcMain.handle('mods:list', () => {
+  const dir = modsDir(load().settings);
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter(f => f.endsWith('.jar')).map(f => ({ name: f, size: fs.statSync(path.join(dir, f)).size }));
+});
+ipcMain.handle('mods:remove', (_e, name) => {
+  const f = path.join(modsDir(load().settings), path.basename(String(name)));
+  if (fs.existsSync(f)) fs.unlinkSync(f);
 });
 
 ipcMain.handle('open', (_e, what) => {

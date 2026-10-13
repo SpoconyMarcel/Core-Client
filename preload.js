@@ -9,6 +9,10 @@ contextBridge.exposeInMainWorld('core', {
   select: id => r.invoke('acc:select', id),
   remove: id => r.invoke('acc:remove', id),
   launch: () => r.invoke('launch'),
+  mrSearch: q => r.invoke('mr:search', q),
+  mrInstall: id => r.invoke('mr:install', id),
+  modsList: () => r.invoke('mods:list'),
+  modsRemove: n => r.invoke('mods:remove', n),
   open: w => r.invoke('open', w),
   url: u => r.invoke('url', u),
   on: (ch, fn) => r.on(ch, (_e, d) => fn(d))

@@ -1,7 +1,7 @@
 {
   "name": "core-client",
   "productName": "Core Client",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Core Client – launcher Minecrafta 1.8.8 do najnowszej",
   "main": "main.js",
   "repository": "github:TWOJ_NICK/core-client",

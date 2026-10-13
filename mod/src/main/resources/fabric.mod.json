@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "coreclient",
+  "version": "${version}",
+  "name": "Core Client",
+  "description": "HUD, koordynaty, Full Vision, zoom, bindy i menu główne Core Client.",
+  "authors": ["Core Client"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "client": ["pl.coreclient.CoreClientMod"] },
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

@@ -43,18 +43,18 @@ input[type=text],input[type=search],select{background:var(--bg);color:var(--tx);
 .m.play small{font-weight:500;font-size:12px;opacity:.85;letter-spacing:0}
 .m.play:hover{filter:brightness(1.12)}
 .m.play[disabled]{filter:grayscale(.7);cursor:wait}
-#quit{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);width:266px;height:56px;background:#2a1d17;border:0;border-radius:6px;color:var(--ac);font:700 19px 'Segoe UI'}
+#quit{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);width:266px;height:56px;background:#2a1d17;border:0;border-radius:6px;color:var(--ac);font:700 19px 'Segoe UI',system-ui,sans-serif}
 #quit:hover{background:#3a261b}
 #ver{position:absolute;left:0;right:0;bottom:22px;text-align:center;color:var(--mu);font-size:14px}
 #promo{position:absolute;left:12px;bottom:12px;width:300px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:4px}
 #promo .art{font:900 34px 'Courier New',monospace;color:var(--ac);margin:18px 0 20px}
-#promo em{color:var(--ac);font:600 11px 'Segoe UI';letter-spacing:2px;font-style:normal}
+#promo em{color:var(--ac);font:600 11px 'Segoe UI',system-ui,sans-serif;letter-spacing:2px;font-style:normal}
 #promo h3{margin:0 0 8px;font-size:19px}
 .btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:10px;font-weight:600;width:100%}.btn:hover{filter:brightness(1.1)}
-#upd{position:absolute;right:12px;bottom:12px;width:306px;height:172px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#ff8a1f,#c85000);display:grid;place-items:center;font:900 34px 'Segoe UI';color:#fff}
+#upd{position:absolute;right:12px;bottom:12px;width:306px;height:172px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#ff8a1f,#c85000);display:grid;place-items:center;font:900 34px 'Segoe UI',system-ui,sans-serif;color:#fff}
 #upd small{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;background:rgba(0,0,0,.6);font-size:13px;font-weight:600}
 /* status bar */
-#bar{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);width:420px;max-width:90vw;padding:12px 16px;display:none;z-index:4}
+#bar{position:absolute;left:50%;top:64px;transform:translateX(-50%);width:420px;max-width:90vw;padding:12px 16px;display:none;z-index:4}
 #bar.on{display:block}#bar span{font-size:13px;color:var(--mu)}
 #bar .t{height:6px;background:var(--bg);border-radius:3px;margin-top:8px;overflow:hidden}#bar .t i{display:block;height:100%;width:0;background:var(--ac);transition:width .2s}
 /* panels */
@@ -75,6 +75,9 @@ input[type=range]{accent-color:var(--ac);width:200px}
 .vl{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:12px}
 .vl button{padding:10px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}.vl button.on{border-color:var(--ac);color:var(--ac);background:#2a1a0c}
 .warn{padding:10px 12px;border-radius:8px;background:#3a1a1a;border:1px solid #6a2a2a;margin-bottom:12px;font-size:13px}
+.mr{display:flex;gap:12px;align-items:center;padding:10px 12px;margin-bottom:8px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}
+.mr img{width:44px;height:44px;border-radius:8px;flex:none;background:var(--l)}.mr div{flex:1;min-width:0}.mr b{display:block}.mr small{display:block;color:var(--mu);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mr .k:disabled{opacity:.6}
 pre{margin:0;max-height:48vh;overflow:auto;font-size:12px;color:var(--mu);background:var(--bg);padding:10px;border-radius:8px;white-space:pre-wrap;user-select:text}
 #toast{position:absolute;left:50%;top:70px;transform:translateX(-50%);background:var(--p2);border:1px solid var(--ac);padding:10px 18px;border-radius:8px;display:none;z-index:9;font-size:14px}
 </style></head><body>
@@ -118,11 +121,13 @@ pre{margin:0;max-height:48vh;overflow:auto;font-size:12px;color:var(--mu);backgr
 
 <script>
 const $=s=>document.querySelector(s);
-const L={pl:{msLogin:'Zaloguj przez Microsoft',offline:'Gra offline',nick:'Nick do gry offline',saved:'Zapisane konta',discord:'Dołącz na Discord',play:'GRAJ',versions:'Wersje',mods:'Mody',binds:'Bindy',settings:'Ustawienia',partners:'Partnerzy',partnerTag:'PARTNER',view:'Zobacz',quit:'ZAMKNIJ',accounts:'Konta',addMs:'Dodaj konto Microsoft',addOff:'Dodaj konto offline',ram:'Pamięć RAM',full:'Pełny ekran',jvm:'Argumenty JVM',hide:'Ukryj launcher podczas gry',dlink:'Link do Discorda',vtext:'Tekst wersji w menu gry',folder:'Folder gry',modsFolder:'Otwórz folder modów',loader:'Silnik',search:'Szukaj wersji',fabricNote:'Fabric: wrzuć pliki .jar do folderu modów. Od 1.14 Fabric, starsze wersje (1.8.9, 1.12.2...) przez Legacy Fabric.',vanilla:'Vanilla',hud:'Moduły HUD',bindHint:'Kliknij przycisk i naciśnij klawisz',logs:'Logi',noLogs:'Brak logów.',javaBad:'Wymagana Java ',javaNone:'Nie znaleziono Javy. Zainstaluj Javę ',javaFound:'Masz Javę ',active:'Aktywne',logout:'Usuń',partnerText:'Oficjalny partner Core Client. Wspólne serwery, eventy i kosmetyki.',started:'Gra zamknięta',pick:'Wybierz wersję'},
-en:{msLogin:'Sign in with Microsoft',offline:'Play offline',nick:'Offline nickname',saved:'Saved accounts',discord:'Join our Discord',play:'PLAY',versions:'Versions',mods:'Mods',binds:'Keybinds',settings:'Settings',partners:'Partners',partnerTag:'PARTNER',view:'View',quit:'QUIT',accounts:'Accounts',addMs:'Add Microsoft account',addOff:'Add offline account',ram:'Memory (RAM)',full:'Fullscreen',jvm:'JVM arguments',hide:'Hide launcher while playing',dlink:'Discord link',vtext:'Version text in game menu',folder:'Game folder',modsFolder:'Open mods folder',loader:'Loader',search:'Search versions',fabricNote:'Fabric: put .jar files in the mods folder. Fabric from 1.14, older versions (1.8.9, 1.12.2...) via Legacy Fabric.',vanilla:'Vanilla',hud:'HUD modules',bindHint:'Click a button and press a key',logs:'Logs',noLogs:'No logs yet.',javaBad:'Java required: ',javaNone:'Java not found. Install Java ',javaFound:'You have Java ',active:'Active',logout:'Remove',partnerText:'Official Core Client partner. Shared servers, events and cosmetics.',started:'Game closed',pick:'Pick a version'}};
+const L={pl:{msLogin:'Zaloguj przez Microsoft',offline:'Gra offline',nick:'Nick do gry offline',saved:'Zapisane konta',discord:'Dołącz na Discord',play:'GRAJ',versions:'Wersje',mods:'Mody',binds:'Bindy',settings:'Ustawienia',partners:'Partnerzy',partnerTag:'PARTNER',view:'Zobacz',quit:'ZAMKNIJ',accounts:'Konta',addMs:'Dodaj konto Microsoft',addOff:'Dodaj konto offline',ram:'Pamięć RAM',full:'Pełny ekran',jvm:'Argumenty JVM',hide:'Ukryj launcher podczas gry',dlink:'Link do Discorda',hudTab:'HUD',mrTab:'Modrinth',instTab:'Zainstalowane',inst:'Zainstaluj',installed:'Zainstalowano',searchMods:'Szukaj modów na Modrinth',noMods:'Brak modów.',menuKey:'W grze: Prawy Shift otwiera menu modułów.',vtext:'Tekst wersji w menu gry',folder:'Folder gry',modsFolder:'Otwórz folder modów',loader:'Silnik',search:'Szukaj wersji',fabricNote:'Fabric: wrzuć pliki .jar do folderu modów. Od 1.14 Fabric, starsze wersje (1.8.9, 1.12.2...) przez Legacy Fabric.',vanilla:'Vanilla',hud:'Moduły HUD',bindHint:'Kliknij przycisk i naciśnij klawisz',logs:'Logi',noLogs:'Brak logów.',javaBad:'Wymagana Java ',javaNone:'Nie znaleziono Javy. Zainstaluj Javę ',javaFound:'Masz Javę ',active:'Aktywne',logout:'Usuń',partnerText:'Oficjalny partner Core Client. Wspólne serwery, eventy i kosmetyki.',started:'Gra zamknięta',pick:'Wybierz wersję'},
+en:{msLogin:'Sign in with Microsoft',offline:'Play offline',nick:'Offline nickname',saved:'Saved accounts',discord:'Join our Discord',play:'PLAY',versions:'Versions',mods:'Mods',binds:'Keybinds',settings:'Settings',partners:'Partners',partnerTag:'PARTNER',view:'View',quit:'QUIT',accounts:'Accounts',addMs:'Add Microsoft account',addOff:'Add offline account',ram:'Memory (RAM)',full:'Fullscreen',jvm:'JVM arguments',hide:'Hide launcher while playing',dlink:'Discord link',hudTab:'HUD',mrTab:'Modrinth',instTab:'Installed',inst:'Install',installed:'Installed',searchMods:'Search mods on Modrinth',noMods:'No mods.',menuKey:'In game: Right Shift opens the modules menu.',vtext:'Version text in game menu',folder:'Game folder',modsFolder:'Open mods folder',loader:'Loader',search:'Search versions',fabricNote:'Fabric: put .jar files in the mods folder. Fabric from 1.14, older versions (1.8.9, 1.12.2...) via Legacy Fabric.',vanilla:'Vanilla',hud:'HUD modules',bindHint:'Click a button and press a key',logs:'Logs',noLogs:'No logs yet.',javaBad:'Java required: ',javaNone:'Java not found. Install Java ',javaFound:'You have Java ',active:'Active',logout:'Remove',partnerText:'Official Core Client partner. Shared servers, events and cosmetics.',started:'Game closed',pick:'Pick a version'}};
+let modTab='hud',mrq='',mrBusy=false;
 let ST=null,list=[],logs=[],busy=false,wait=null,cur=null,q='';
 const t=k=>(L[ST?ST.settings.lang:'pl']||L.pl)[k]||k;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clean=e=>String(e.message||e).replace(/^Error invoking remote method '[^']+': (Error: )?/,'');
 function toast(m){const e=$('#toast');e.textContent=m;e.style.display='block';clearTimeout(e.h);e.h=setTimeout(()=>e.style.display='none',3200)}
 const hue=n=>[...n].reduce((a,c)=>a+c.charCodeAt(0)*7,0)%360;
 const av=n=>`<span class="av" style="background:hsl(${hue(n)} 70% 62%)"><img src="https://mc-heads.net/avatar/${encodeURIComponent(n)}/36" alt="" onerror="this.remove()">${esc(n[0].toUpperCase())}</span>`;
@@ -142,7 +147,7 @@ function render(){
   $('#laccs').innerHTML=ST.accounts.length?`<h4>${t('saved')}</h4>`+accList():'';
   if(logged){const a=active();$('#me').innerHTML=av(a.name)+esc(a.name.toUpperCase());
     const s=ST.settings;$('#pinfo').textContent=(s.version||'—')+' · '+(s.loader==='fabric'?'Fabric':'Vanilla');
-    $('#ver').textContent='Core Client 0.3.1 ('+(s.version||'—')+')';$('#dlink').textContent=s.discord.replace('https://','');}
+    $('#ver').textContent='Core Client 0.4.0 ('+(s.version||'—')+')';$('#dlink').textContent=s.discord.replace('https://','');}
   $('#play').disabled=busy;
 }
 async function run(f){try{ST=await f();render();return true}catch(e){const m=String(e.message||e).replace(/^Error invoking remote method '[^']+': (Error: )?/,'');($('#login').classList.contains('on')?$('#lerr').textContent=m:toast(m));return false}}
@@ -161,7 +166,12 @@ async function body(n){const s=ST.settings;let h='';
   (s.loader==='fabric'?`<div class="row"><small>${t('fabricNote')}</small></div>`:'')+
   `<input type="search" id="q" placeholder="${t('search')}" value="${esc(q)}" style="width:100%"><div class="vl">${list.filter(v=>v.includes(q)).map(v=>`<button data-v="${v}" class="${v===s.version?'on':''}">${v}</button>`).join('')}</div>`;
  }
- if(n==='mods'){h=`<h4 style="margin:0 0 10px;color:var(--mu);font-weight:500">${t('hud')}</h4>`+Object.entries(s.mods).map(([k,v])=>`<div class="row"><b>${esc(k)}</b><input type="checkbox" class="sw" data-mod="${esc(k)}" ${v?'checked':''}></div>`).join('')+`<button class="btn" data-open="mods" style="margin-top:6px">${t('modsFolder')}</button>`}
+ if(n==='mods'){
+  const tabs=`<div class="seg">${[['hud','hudTab'],['mr','mrTab'],['inst','instTab']].map(([k,l])=>`<button data-mt="${k}" class="${modTab===k?'on':''}">${t(l)}</button>`).join('')}</div>`;
+  if(modTab==='hud')h=tabs+`<p style="color:var(--mu);margin-top:0">${t('menuKey')}</p>`+Object.entries(s.mods).map(([k,v])=>`<div class="row"><b>${esc(k)}</b><input type="checkbox" class="sw" data-mod="${esc(k)}" ${v?'checked':''}></div>`).join('');
+  if(modTab==='mr')h=tabs+`<input type="search" id="mq" placeholder="${t('searchMods')}" value="${esc(mrq)}" style="width:100%;margin-bottom:10px"><div id="mres"></div>`;
+  if(modTab==='inst')h=tabs+`<div id="ilist"></div><button class="btn" data-open="mods" style="margin-top:6px">${t('modsFolder')}</button>`;
+ }
  if(n==='binds'){h=`<p style="color:var(--mu);margin-top:0">${t('bindHint')}</p>`+Object.entries(s.binds).map(([k,v])=>`<div class="row"><b>${esc(k)}</b><button class="k ${wait===k?'on':''}" data-bind="${esc(k)}">${wait===k?'...':esc(v)}</button></div>`).join('')}
  if(n==='settings'){h=`<div class="row"><span>${t('ram')}: <b id="rv">${s.ram} GB</b></span><input type="range" id="ram" min="1" max="16" value="${s.ram}"></div>
   <div class="row"><span>${t('full')}</span><input type="checkbox" class="sw" id="fs" ${s.fullscreen?'checked':''}></div>
@@ -176,6 +186,12 @@ async function body(n){const s=ST.settings;let h='';
  if(n==='logs'){h=`<pre>${logs.length?esc(logs.slice(-300).join('\n')):t('noLogs')}</pre>`}
  $('#body').innerHTML=h;
  if(n==='versions'){const i=$('#q');i.oninput=()=>{q=i.value;const p=i.selectionStart;body('versions').then(()=>{const j=$('#q');j.focus();j.setSelectionRange(p,p)})}}
+ if(n==='mods'&&modTab==='mr'){
+  const go=async()=>{if(mrBusy)return;mrBusy=true;$('#mres').innerHTML='<p style="color:var(--mu)">...</p>';
+   try{const r=await core.mrSearch(mrq);$('#mres').innerHTML=r.length?r.map(x=>`<div class="mr"><img src="${esc(x.icon||'')}" alt="" onerror="this.style.visibility='hidden'"><div><b>${esc(x.title)}</b><small>${esc(x.desc)}</small><small>${esc(x.author)} · ${(x.downloads/1000).toFixed(0)}k</small></div><button class="k" data-mi="${esc(x.id)}">${t('inst')}</button></div>`).join(''):`<p style="color:var(--mu)">${t('noMods')}</p>`}
+   catch(e){$('#mres').innerHTML='';toast(clean(e))}mrBusy=false};
+  $('#mq').onkeydown=e=>{if(e.key==='Enter'){mrq=e.target.value;go()}};go()}
+ if(n==='mods'&&modTab==='inst'){core.modsList().then(r=>{$('#ilist').innerHTML=r.length?r.map(x=>`<div class="row"><div><b>${esc(x.name)}</b><small>${(x.size/1048576).toFixed(2)} MB</small></div><button class="k" data-mrm="${esc(x.name)}">×</button></div>`).join(''):`<p style="color:var(--mu)">${t('noMods')}</p>`})}
  if(n==='settings'){
   const sv=()=>set({ram:+$('#ram').value,fullscreen:$('#fs').checked,hide:$('#hd').checked,jvm:$('#jvm').value,versionText:$('#vt').value,discord:$('#dl').value.startsWith('https://')?$('#dl').value:ST.settings.discord});
   $('#ram').oninput=()=>$('#rv').textContent=$('#ram').value+' GB';
@@ -194,9 +210,12 @@ document.addEventListener('click',async e=>{
  if(b=g('data-ld')){await set({loader:b.dataset.ld});render();body('versions');return}
  if(b=g('data-mod')){await set({mods:{...ST.settings.mods,[b.dataset.mod]:b.checked}});return}
  if(b=g('data-bind')){wait=b.dataset.bind;body('binds');return}
+ if(b=g('data-mt')){modTab=b.dataset.mt;body('mods');return}
+ if(b=g('data-mi')){b.disabled=true;b.textContent='...';try{await core.mrInstall(b.dataset.mi);b.textContent=t('installed')}catch(err){b.disabled=false;b.textContent=t('inst');toast(clean(err))}return}
+ if(b=g('data-mrm')){await core.modsRemove(b.dataset.mrm);body('mods');return}
  if(b=g('data-open')){core.open(b.dataset.open);return}
 });
-addEventListener('keydown',async e=>{if(!wait)return;e.preventDefault();const k=e.key.length===1?e.key.toUpperCase():e.key;await set({binds:{...ST.settings.binds,[wait]:k}});wait=null;body('binds')});
+addEventListener('keydown',async e=>{if(!wait)return;e.preventDefault();const k=e.code==='ShiftRight'?'RShift':e.code==='ShiftLeft'?'Shift':(e.key.length===1?e.key.toUpperCase():e.key);await set({binds:{...ST.settings.binds,[wait]:k}});wait=null;body('binds')});
 $('#logb').onclick=()=>openPanel('logs');
 $('#lang').onclick=async()=>{await set({lang:ST.settings.lang==='pl'?'en':'pl'});render();if(cur)openPanel(cur)};
 $('#discord').onclick=()=>core.url(ST.settings.discord);

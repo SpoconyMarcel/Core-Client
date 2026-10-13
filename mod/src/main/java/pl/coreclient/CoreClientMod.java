@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 public class CoreClientMod implements ClientModInitializer {
     static boolean fullVision, sprintToggle, zooming, addedNightVision;
     static int origFov = 70;
-    private static final boolean[] prev = new boolean[2];
+    private static final boolean[] prev = new boolean[3];
 
     @Override
     public void onInitializeClient() {
@@ -35,6 +35,8 @@ public class CoreClientMod implements ClientModInitializer {
         if (c.currentScreen instanceof TitleScreen) { c.setScreen(new CoreTitleScreen()); return; }
         if (c.player == null) return;
         boolean free = c.currentScreen == null;
+
+        if (edge(2, free && KeyUtil.down(KeyUtil.code(CoreConfig.bind("Menu Core"))))) { c.setScreen(new CoreModsScreen()); return; }
 
         if (CoreConfig.mod("Full Vision") && edge(0, free && KeyUtil.down(KeyUtil.code(CoreConfig.bind("Full Vision"))))) fullVision = !fullVision;
         if (CoreConfig.mod("Toggle Sprint") && edge(1, free && KeyUtil.down(KeyUtil.code(CoreConfig.bind("Toggle Sprint"))))) sprintToggle = !sprintToggle;
