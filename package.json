@@ -1,10 +1,10 @@
 {
   "name": "core-client",
   "productName": "Core Client",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Core Client – launcher Minecrafta 1.8.8 do najnowszej",
   "main": "main.js",
-  "repository": "github:SpoconyMarcel/core-client",
+  "repository": "github:TWOJ_NICK/core-client",
   "scripts": { "start": "electron .", "build": "electron-builder", "release": "electron-builder --publish always" },
   "dependencies": { "minecraft-launcher-core": "^3.18.2", "msmc": "^5.0.0" },
   "devDependencies": { "electron": "^31.0.0", "electron-builder": "^24.13.3" },

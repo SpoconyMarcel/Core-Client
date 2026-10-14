@@ -12,7 +12,7 @@ const defaults = () => ({
   accounts: [], active: null,
   settings: {
     version: null, loader: 'fabric', ram: 4, fullscreen: false, jvm: '', lang: 'pl',
-    discord: 'https://discord.gg/', hide: true, versionText: '',
+    discord: 'https://discord.gg/', hide: true, history: [], servers: [], versionText: '',
     mods: { FPS: true, CPS: true, Keystrokes: false, 'Armor Status': false, Zoom: true, 'Toggle Sprint': false, 'Full Vision': true, Koordynaty: true },
     binds: { 'Menu Core': 'RShift', Zoom: 'C', 'Full Vision': 'V', 'Toggle Sprint': 'G', Freelook: 'Alt' }
   }
@@ -82,6 +82,38 @@ ipcMain.handle('java', (_e, version) => new Promise(res => {
   });
 }));
 
+
+// Automatyczne pobieranie właściwej Javy (8 dla 1.8-1.16, 17 dla 1.17-1.20.4, 21 dla nowszych)
+async function ensureJava(major) {
+  const base = path.join(ROOT, 'runtime', `java-${major}`);
+  const exe = process.platform === 'win32' ? 'java.exe' : 'java';
+  const find = d => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) { const r = find(p); if (r) return r; }
+      else if (e.name === exe && path.basename(d) === 'bin') return p;
+    }
+    return null;
+  };
+  if (fs.existsSync(base)) { const f = find(base); if (f) return f; }
+  const os = { win32: 'windows', darwin: 'mac', linux: 'linux' }[process.platform];
+  const arch = process.arch === 'arm64' ? 'aarch64' : 'x64';
+  send('status', `Pobieranie Javy ${major}...`);
+  const res = await fetch(`https://api.adoptium.net/v3/binary/latest/${major}/ga/${os}/${arch}/jre/hotspot/normal/eclipse`, { redirect: 'follow' });
+  if (!res.ok) throw new Error(`Nie udało się pobrać Javy ${major} (kod ${res.status})`);
+  const buf = Buffer.from(await res.arrayBuffer());
+  fs.mkdirSync(base, { recursive: true });
+  const tmp = path.join(ROOT, 'runtime', `java-${major}.${process.platform === 'win32' ? 'zip' : 'tar.gz'}`);
+  fs.writeFileSync(tmp, buf);
+  send('status', `Rozpakowywanie Javy ${major}...`);
+  await new Promise((ok, no) => execFile('tar', ['-xf', tmp, '-C', base], e => e ? no(new Error('Rozpakowanie Javy nie powiodło się')) : ok()));
+  try { fs.unlinkSync(tmp); } catch {}
+  const f = find(base);
+  if (!f) throw new Error('Nie znaleziono Javy po rozpakowaniu');
+  if (process.platform !== 'win32') fs.chmodSync(f, 0o755);
+  return f;
+}
+
 const legacy = v => Number(v.split('.')[1]) < 14;
 const META = v => legacy(v) ? 'https://meta.legacyfabric.net/v2/versions/loader' : 'https://meta.fabricmc.net/v2/versions/loader';
 
@@ -113,7 +145,7 @@ function installBundledMods(mc, gd) {
   for (const f of fs.readdirSync(src)) if (f.endsWith('.jar') && f.includes('+' + mc)) fs.copyFileSync(path.join(src, f), path.join(gd, 'mods', f));
 }
 
-ipcMain.handle('launch', async () => {
+ipcMain.handle('launch', async (_e, serverAddr) => {
   if (running) throw new Error('Gra już działa');
   const d = load(), s = d.settings, acc = d.accounts.find(a => a.id === d.active);
   if (!acc) throw new Error('Wybierz konto');
@@ -129,14 +161,18 @@ ipcMain.handle('launch', async () => {
       try { acc.token = enc(xbox.save()); save(d); } catch {}
     } else auth = Authenticator.getAuth(acc.name);
 
-    let custom;
-    if (s.loader === 'fabric') { send('status', 'Instalacja Fabric...'); custom = await ensureFabric(s.version); }
+    let custom, useFabric = s.loader === 'fabric';
+    if (useFabric) {
+      try { send('status', 'Instalacja Fabric...'); custom = await ensureFabric(s.version); }
+      catch (e) { useFabric = false; custom = undefined; send('status', 'Fabric niedostępny, start bez modów'); send('log', 'Fabric: ' + e.message); }
+    }
 
     fs.mkdirSync(path.join(GAME, 'mods'), { recursive: true });
     fs.mkdirSync(path.join(GAME, 'config'), { recursive: true });
     fs.writeFileSync(path.join(GAME, 'config', 'coreclient.json'), JSON.stringify({ mods: s.mods, binds: s.binds, user: acc.name, versionText: s.versionText || ('Core Client ' + s.version) }, null, 2));
 
-    if (s.loader === 'fabric') { send('status', 'Fabric API...'); await ensureFabricApi(s.version, GAME); installBundledMods(s.version, GAME); }
+    if (useFabric) { try { send('status', 'Fabric API...'); await ensureFabricApi(s.version, GAME); installBundledMods(s.version, GAME); } catch (e) { send('log', 'Fabric API: ' + e.message); } }
+    const javaPath = await ensureJava(needJava(s.version));
 
     const launcher = new Client();
     launcher.on('progress', p => { send('status', 'Pobieranie: ' + p.type); send('progress', p); });
@@ -146,14 +182,18 @@ ipcMain.handle('launch', async () => {
     launcher.on('close', c => { running = false; if (win && !win.isDestroyed()) win.show(); send('closed', c); });
 
     const opts = {
-      authorization: auth, root: ROOT, overrides: { gameDirectory: GAME },
+      authorization: auth, root: ROOT, javaPath, overrides: { gameDirectory: GAME },
       version: { number: s.version, type: 'release', ...(custom ? { custom } : {}) },
       memory: { max: `${s.ram}G`, min: '1G' },
       customArgs: s.jvm ? s.jvm.split(/\s+/).filter(Boolean) : []
     };
     if (s.fullscreen) opts.window = { fullscreen: true };
+    if (serverAddr) { const [host, port] = String(serverAddr).split(':'); opts.server = { host, port: port || '25565' }; }
     const proc = await launcher.launch(opts);
-    if (!proc) throw new Error('Nie udało się uruchomić gry. Sprawdź Javę i logi.');
+    if (!proc) throw new Error('Nie udało się uruchomić gry. Sprawdź logi (ikona notatnika).');
+    const d2 = load();
+    d2.settings.history = [{ version: s.version, loader: useFabric ? 'fabric' : 'vanilla', ts: Date.now() }, ...(d2.settings.history || []).filter(h => !(h.version === s.version && h.loader === (useFabric ? 'fabric' : 'vanilla')))].slice(0, 5);
+    save(d2);
   } catch (e) { running = false; throw e; }
 });
 

@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('core', {
   loginOffline: n => r.invoke('acc:offline', n),
   select: id => r.invoke('acc:select', id),
   remove: id => r.invoke('acc:remove', id),
-  launch: () => r.invoke('launch'),
+  launch: s => r.invoke('launch', s),
   mrSearch: q => r.invoke('mr:search', q),
   mrInstall: id => r.invoke('mr:install', id),
   modsList: () => r.invoke('mods:list'),

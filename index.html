@@ -1,9 +1,9 @@
 <!DOCTYPE html><html lang="pl"><head><meta charset="utf-8"><title>Core Client</title>
 <style>
-:root{--bg:#0a0b10;--p:#10131b;--p2:#161a25;--l:#252b3b;--tx:#f2f3f7;--mu:#8a90a5;--ac:#ff8a1f;--ac2:#ffc21f;--ok:#4ade80;--er:#f87171}
+:root{--bg:#0a0b10;--p:#10131b;--p2:#161a25;--l:#252b3b;--tx:#f2f3f7;--mu:#8a90a5;--ac:#e0213b;--ac2:#ff6b7d;--ok:#4ade80;--er:#f87171}
 *{box-sizing:border-box}html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--tx);font:15px 'Segoe UI',system-ui,sans-serif;overflow:hidden;position:relative;user-select:none}
-.bg{position:absolute;inset:-10%;background:radial-gradient(ellipse at 18% 88%,#4a2a18 0,transparent 42%),radial-gradient(ellipse at 82% 50%,#16265a 0,transparent 52%),radial-gradient(ellipse at 50% 0,#2a1020 0,transparent 50%);animation:drift 24s ease-in-out infinite alternate}
+.bg{position:absolute;inset:-10%;background:radial-gradient(ellipse at 18% 88%,#3a1018 0,transparent 42%),radial-gradient(ellipse at 82% 50%,#16265a 0,transparent 52%),radial-gradient(ellipse at 50% 0,#2a1020 0,transparent 50%);animation:drift 24s ease-in-out infinite alternate}
 @keyframes drift{to{transform:translate(2%,-2%) scale(1.06)}}
 @media (prefers-reduced-motion:reduce){.bg{animation:none}}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -30,31 +30,55 @@ input[type=text],input[type=search],select{background:var(--bg);color:var(--tx);
 .acc small{color:var(--mu);display:block;font-size:12px}.acc .x{margin-left:auto;background:none;border:0;color:var(--mu);font-size:18px;padding:2px 6px}.acc .x:hover{color:var(--er)}
 .err{color:var(--er);min-height:20px;font-size:13px;margin-top:6px}
 /* home */
-#discord{position:absolute;left:12px;top:12px;display:flex;gap:10px;align-items:center;padding:9px 14px;font-size:13px}
+#tb{position:absolute;left:0;right:0;top:0;height:36px;display:flex;align-items:center;gap:22px;padding:0 16px;font-size:12px;color:var(--mu);border-bottom:1px solid var(--l);background:rgba(10,11,16,.7)}
+#tb .sp{flex:1}#tb button{background:none;border:0;color:var(--mu);font-size:14px;padding:4px 8px;border-radius:4px}#tb button:hover{color:var(--tx);background:var(--p)}
+#side{position:absolute;left:0;top:36px;bottom:0;width:96px;display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0;border-right:1px solid var(--l);background:rgba(10,11,16,.5)}
+#side button{width:58px;height:58px;border-radius:12px;border:0;background:none;color:var(--tx);display:grid;place-items:center}
+#side button:hover{background:var(--p2)}#side button.on{background:#3a1018;color:var(--ac2)}
+#side svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+#side .gap{flex:1}
+#side #sideplay{width:64px;height:64px;background:linear-gradient(135deg,#e0213b,#8a1020);color:#fff}
+#side #sideplay:hover{filter:brightness(1.15)}#side #sideplay:disabled{filter:grayscale(.8);cursor:wait}
+#hm{position:absolute;left:96px;right:0;top:36px;bottom:0;overflow:auto;padding:16px 28px 28px 24px}
+#tabrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+#tabs{display:flex;gap:4px;padding:6px;border:1px solid var(--l);border-radius:12px;background:rgba(16,19,27,.8)}
+.tab{height:52px;min-width:190px;border:0;border-radius:8px;background:none;color:var(--mu);font:800 21px 'Courier New',monospace;letter-spacing:3px}
+.tab.on{background:linear-gradient(135deg,#e0213b,#a0162b);color:#fff}
+#discord{display:flex;gap:10px;align-items:center;padding:10px 14px;font-size:13px;text-align:left}
 #discord small{display:block;color:var(--mu);font-size:11px}
-#top{position:absolute;right:14px;top:12px;display:flex;gap:10px;align-items:center}
-#top .ic{height:46px;min-width:46px;padding:0 13px;font-size:18px}
-#me{display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;font-weight:700;font-size:13px;letter-spacing:.5px}
-#me .av{width:28px;height:28px}
-#center{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);width:344px;display:flex;flex-direction:column;gap:11px;align-items:center}
-#center .logo{margin-bottom:26px}
-.m{width:100%;height:58px;border-radius:7px;font-weight:500;font-size:16px;display:flex;align-items:center;justify-content:center;gap:12px}
-.m.play{height:74px;background:linear-gradient(90deg,#ff7a1a,#8a3f10);border:1px solid var(--ac);font-weight:800;font-size:22px;letter-spacing:1px;flex-direction:column;gap:0;line-height:1.2}
-.m.play small{font-weight:500;font-size:12px;opacity:.85;letter-spacing:0}
-.m.play:hover{filter:brightness(1.12)}
-.m.play[disabled]{filter:grayscale(.7);cursor:wait}
-#quit{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);width:266px;height:56px;background:#2a1d17;border:0;border-radius:6px;color:var(--ac);font:700 19px 'Segoe UI',system-ui,sans-serif}
-#quit:hover{background:#3a261b}
-#ver{position:absolute;left:0;right:0;bottom:22px;text-align:center;color:var(--mu);font-size:14px}
-#promo{position:absolute;left:12px;bottom:12px;width:300px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:4px}
-#promo .art{font:900 34px 'Courier New',monospace;color:var(--ac);margin:18px 0 20px}
-#promo em{color:var(--ac);font:600 11px 'Segoe UI',system-ui,sans-serif;letter-spacing:2px;font-style:normal}
-#promo h3{margin:0 0 8px;font-size:19px}
-.btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:10px;font-weight:600;width:100%}.btn:hover{filter:brightness(1.1)}
-#upd{position:absolute;right:12px;bottom:12px;width:306px;height:172px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#ff8a1f,#c85000);display:grid;place-items:center;font:900 34px 'Segoe UI',system-ui,sans-serif;color:#fff}
-#upd small{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;background:rgba(0,0,0,.6);font-size:13px;font-weight:600}
+#cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(290px,1fr);gap:24px}
+#hero{position:relative;height:290px;border-radius:16px;overflow:hidden;border:1px solid var(--l)}
+#scene{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+#skin{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:96%;image-rendering:pixelated}
+#nt{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(20,22,30,.82);border:1px solid var(--l);border-radius:8px;padding:6px 14px;font-weight:700;text-align:center;font-size:16px}#nt small{display:block;font-weight:400;font-size:11px;color:var(--mu)}
+#notch{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:300px;padding:10px 14px 0;background:var(--bg);border-radius:18px 18px 0 0}
+#me{display:flex;align-items:center;gap:10px;width:100%;height:42px;padding:0 10px;background:var(--p);border:1px solid var(--l);border-radius:8px;font-weight:600;font-size:14px;color:var(--tx)}
+#me span.n{flex:1;text-align:center}#me .av{width:26px;height:26px}
+#pen{position:absolute;right:12px;bottom:12px;width:38px;height:38px;border-radius:8px;border:1px solid var(--l);background:var(--bg);color:var(--tx)}
+.phead{display:flex;align-items:center;gap:10px;margin:20px 0 12px;font-weight:600}
+.prof{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:14px;background:var(--p);border:1px solid var(--l);margin-bottom:10px}
+.prof.hl{padding:20px 18px;background:linear-gradient(90deg,#2a1218,var(--p))}
+.pic{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,#ff8a1f,#e0213b);display:grid;place-items:center;font:900 26px 'Courier New',monospace;flex:none}
+.prof.hl .pic{width:64px;height:64px}
+.pi{flex:1;min-width:0}.pi b{display:block;font-size:20px}.prof:not(.hl) .pi b{font-size:16px}.pi small{color:var(--mu)}
+.pl{background:linear-gradient(135deg,#e0213b,#a0162b);border:0;color:#fff;font-weight:600;padding:12px 28px;border-radius:10px;font-size:16px}.pl:hover{filter:brightness(1.12)}.pl:disabled{filter:grayscale(.8);cursor:wait}
+.gear{width:46px;height:46px;border-radius:10px;border:0;background:#000;color:var(--ac2);font-size:18px}
+#brow{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.red{background:linear-gradient(90deg,#e0213b,#8a1020);border:0;color:#fff;font-weight:600;height:46px;padding:0 40px;border-radius:12px;min-width:280px}
+.ghost{background:none;border:0;color:var(--tx);font-size:14px}
+.nh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:600}.nh i{width:9px;height:9px;border-radius:50%;background:var(--ac);display:inline-block;margin-right:10px}
+.news{position:relative;height:150px;border-radius:14px;margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,#ff6a2a,#d01f2e 70%);display:flex;flex-direction:column;justify-content:flex-end;padding:14px 16px}
+.news .tag{position:absolute;left:14px;top:62px;background:#d00f27;border-radius:6px;padding:3px 9px;font-size:12px}
+.news em{position:absolute;top:18px;left:0;right:0;text-align:center;font:900 28px 'Segoe UI',system-ui,sans-serif;font-style:normal}
+.news b{font-size:18px}.news small{color:#ffd9d0}
+#srvh{display:flex;gap:18px;align-items:center;margin:6px 0 12px}
+#srvh .cur{padding:12px 16px;border:1px solid #3a5ca8;border-radius:10px;background:#12203f}
+#srvh .cur span{background:#2a63c8;border-radius:10px;padding:1px 9px;margin-left:8px;font-size:13px}
+.srv{display:flex;align-items:center;gap:12px;padding:10px 4px}.srv>div:nth-child(2){flex:1}
+.si{width:44px;height:44px;border-radius:8px;border:2px solid #fff;display:grid;place-items:center}
+.mu{color:var(--mu)}
 /* status bar */
-#bar{position:absolute;left:50%;top:64px;transform:translateX(-50%);width:420px;max-width:90vw;padding:12px 16px;display:none;z-index:4}
+#bar{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);width:420px;max-width:90vw;padding:12px 16px;display:none;z-index:4}
 #bar.on{display:block}#bar span{font-size:13px;color:var(--mu)}
 #bar .t{height:6px;background:var(--bg);border-radius:3px;margin-top:8px;overflow:hidden}#bar .t i{display:block;height:100%;width:0;background:var(--ac);transition:width .2s}
 /* panels */
@@ -73,7 +97,7 @@ input[type=text],input[type=search],select{background:var(--bg);color:var(--tx);
 .sw:checked{background:var(--ac)}.sw:checked::after{transform:translateX(18px)}
 input[type=range]{accent-color:var(--ac);width:200px}
 .vl{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:12px}
-.vl button{padding:10px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}.vl button.on{border-color:var(--ac);color:var(--ac);background:#2a1a0c}
+.vl button{padding:10px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}.vl button.on{border-color:var(--ac);color:var(--ac);background:#2a0f14}
 .warn{padding:10px 12px;border-radius:8px;background:#3a1a1a;border:1px solid #6a2a2a;margin-bottom:12px;font-size:13px}
 .mr{display:flex;gap:12px;align-items:center;padding:10px 12px;margin-bottom:8px;border:1px solid var(--l);border-radius:8px;background:var(--bg)}
 .mr img{width:44px;height:44px;border-radius:8px;flex:none;background:var(--l)}.mr div{flex:1;min-width:0}.mr b{display:block}.mr small{display:block;color:var(--mu);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -92,27 +116,43 @@ pre{margin:0;max-height:48vh;overflow:auto;font-size:12px;color:var(--mu);backgr
 </div></div>
 
 <div class="view" id="home">
- <button class="glass" id="discord"><span>💬</span><div><span data-t="discord"></span><small id="dlink"></small></div></button>
- <div id="top">
-  <button class="glass ic" id="logb" title="Logi">🗒</button>
-  <button class="glass ic" data-w="mods" title="Mody">▦</button>
-  <button class="glass ic" data-w="binds" title="Bindy">⌨</button>
-  <button class="glass ic" data-w="settings" title="Ustawienia">⚙</button>
-  <button class="glass ic" data-w="partners" title="Partnerzy">★</button>
-  <button class="glass ic" id="lang">PL</button>
-  <button class="glass" id="me"></button>
- </div>
- <div id="center">
-  <div class="logo">CORE</div>
-  <button class="m play" id="play"><span data-t="play"></span><small id="pinfo"></small></button>
-  <button class="m glass" data-w="versions">👥&nbsp;<span data-t="versions"></span></button>
-  <button class="m glass" data-w="mods">▦&nbsp;<span data-t="mods"></span></button>
-  <button class="m glass" data-w="partners">★&nbsp;<span data-t="partners"></span></button>
- </div>
- <div class="glass" id="promo"><div class="art">DC</div><em data-t="partnerTag"></em><h3>Depresja Client</h3><button class="btn" data-w="partners" data-t="view"></button></div>
- <div id="upd">+FPS<small>Core Performance Update 1</small></div>
- <button id="quit" data-t="quit"></button>
- <div id="ver"></div>
+ <div id="tb"><span id="ver"></span><span>Custom Theme Active</span><span class="sp"></span><button id="lang">PL</button><button id="logb" title="Logi">🗒</button><button id="quit" title="Zamknij">✕</button></div>
+ <aside id="side">
+  <button class="on" title="Home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/></svg></button>
+  <button data-w="versions" title="Wersje"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+  <button data-am="1" title="Mody"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12L3 7M12 12v10"/></svg></button>
+  <button data-w="partners" title="Partnerzy"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></button>
+  <button data-w="binds" title="Bindy"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></button>
+  <span class="gap"></span>
+  <button data-w="settings" title="Ustawienia"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></button>
+  <button id="sideplay" title="Graj"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg></button>
+ </aside>
+ <main id="hm">
+  <div id="tabrow">
+   <div id="tabs"><button class="tab on">CORE</button><button class="tab" data-w="partners">DEPRESJA</button></div>
+   <button class="glass" id="discord"><span>💬</span><div><span data-t="discord"></span><small id="dlink"></small></div></button>
+  </div>
+  <div id="cols">
+   <section>
+    <div id="hero"><canvas id="scene" width="160" height="72"></canvas>
+     <img id="skin" alt="" onerror="this.style.display='none'">
+     <div id="nt"></div>
+     <div id="notch"><button id="me"></button></div>
+     <button id="pen" data-w="settings" title="Konta">✎</button></div>
+    <div class="phead"><span>🕘</span><span data-t="lastProfiles"></span></div>
+    <div id="profiles"></div>
+    <div id="brow"><button class="red" data-w="versions" data-t="manage"></button><button class="ghost" data-am="1">＋ <span data-t="addMods"></span></button></div>
+   </section>
+   <section>
+    <div class="nh"><span><i></i><span data-t="news"></span></span></div>
+    <div class="news"><em>Modrinth</em><span class="tag" data-t="tagL"></span><b data-t="n1t"></b><small>0.5.0</small></div>
+    <div class="news"><em>+HUD</em><span class="tag" data-t="tagC"></span><b data-t="n2t"></b><small>Full Vision, CPS, XYZ</small></div>
+    <div id="srvh"><div class="cur"><span style="margin:0;background:none;padding:0;font-size:15px" data-t="yourSrv"></span><span id="sc"></span></div></div>
+    <div id="sl"></div>
+    <div style="text-align:center;margin-top:8px"><button class="ghost" data-w="servers" data-t="manageSrv"></button></div>
+   </section>
+  </div>
+ </main>
  <div class="glass" id="bar"><span id="bt"></span><div class="t"><i id="bp"></i></div></div>
 </div>
 
@@ -121,8 +161,8 @@ pre{margin:0;max-height:48vh;overflow:auto;font-size:12px;color:var(--mu);backgr
 
 <script>
 const $=s=>document.querySelector(s);
-const L={pl:{msLogin:'Zaloguj przez Microsoft',offline:'Gra offline',nick:'Nick do gry offline',saved:'Zapisane konta',discord:'Dołącz na Discord',play:'GRAJ',versions:'Wersje',mods:'Mody',binds:'Bindy',settings:'Ustawienia',partners:'Partnerzy',partnerTag:'PARTNER',view:'Zobacz',quit:'ZAMKNIJ',accounts:'Konta',addMs:'Dodaj konto Microsoft',addOff:'Dodaj konto offline',ram:'Pamięć RAM',full:'Pełny ekran',jvm:'Argumenty JVM',hide:'Ukryj launcher podczas gry',dlink:'Link do Discorda',hudTab:'HUD',mrTab:'Modrinth',instTab:'Zainstalowane',inst:'Zainstaluj',installed:'Zainstalowano',searchMods:'Szukaj modów na Modrinth',noMods:'Brak modów.',menuKey:'W grze: Prawy Shift otwiera menu modułów.',vtext:'Tekst wersji w menu gry',folder:'Folder gry',modsFolder:'Otwórz folder modów',loader:'Silnik',search:'Szukaj wersji',fabricNote:'Fabric: wrzuć pliki .jar do folderu modów. Od 1.14 Fabric, starsze wersje (1.8.9, 1.12.2...) przez Legacy Fabric.',vanilla:'Vanilla',hud:'Moduły HUD',bindHint:'Kliknij przycisk i naciśnij klawisz',logs:'Logi',noLogs:'Brak logów.',javaBad:'Wymagana Java ',javaNone:'Nie znaleziono Javy. Zainstaluj Javę ',javaFound:'Masz Javę ',active:'Aktywne',logout:'Usuń',partnerText:'Oficjalny partner Core Client. Wspólne serwery, eventy i kosmetyki.',started:'Gra zamknięta',pick:'Wybierz wersję'},
-en:{msLogin:'Sign in with Microsoft',offline:'Play offline',nick:'Offline nickname',saved:'Saved accounts',discord:'Join our Discord',play:'PLAY',versions:'Versions',mods:'Mods',binds:'Keybinds',settings:'Settings',partners:'Partners',partnerTag:'PARTNER',view:'View',quit:'QUIT',accounts:'Accounts',addMs:'Add Microsoft account',addOff:'Add offline account',ram:'Memory (RAM)',full:'Fullscreen',jvm:'JVM arguments',hide:'Hide launcher while playing',dlink:'Discord link',hudTab:'HUD',mrTab:'Modrinth',instTab:'Installed',inst:'Install',installed:'Installed',searchMods:'Search mods on Modrinth',noMods:'No mods.',menuKey:'In game: Right Shift opens the modules menu.',vtext:'Version text in game menu',folder:'Game folder',modsFolder:'Open mods folder',loader:'Loader',search:'Search versions',fabricNote:'Fabric: put .jar files in the mods folder. Fabric from 1.14, older versions (1.8.9, 1.12.2...) via Legacy Fabric.',vanilla:'Vanilla',hud:'HUD modules',bindHint:'Click a button and press a key',logs:'Logs',noLogs:'No logs yet.',javaBad:'Java required: ',javaNone:'Java not found. Install Java ',javaFound:'You have Java ',active:'Active',logout:'Remove',partnerText:'Official Core Client partner. Shared servers, events and cosmetics.',started:'Game closed',pick:'Pick a version'}};
+const L={pl:{msLogin:'Zaloguj przez Microsoft',offline:'Gra offline',nick:'Nick do gry offline',saved:'Zapisane konta',discord:'Dołącz na Discord',play:'GRAJ',versions:'Wersje',mods:'Mody',binds:'Bindy',settings:'Ustawienia',partners:'Partnerzy',partnerTag:'PARTNER',view:'Zobacz',quit:'ZAMKNIJ',accounts:'Konta',addMs:'Dodaj konto Microsoft',addOff:'Dodaj konto offline',ram:'Pamięć RAM',full:'Pełny ekran',jvm:'Argumenty JVM',hide:'Ukryj launcher podczas gry',dlink:'Link do Discorda',servers:'Serwery',add:'Dodaj',join:'Dołącz',noSrv:'Dodaj serwer, żeby dołączać jednym kliknięciem.',toProfile:'Zmień konto',news:'Najnowsze wiadomości',lastProfiles:'Ostatnio grane profile',manage:'Zarządzaj wszystkimi profilami',addMods:'Dodaj mody',yourSrv:'Twoje serwery',manageSrv:'Zarządzaj serwerami',n1t:'Modrinth i menu modułów',n2t:'Core Performance Update 1',tagL:'LAUNCHER',tagC:'KLIENT',hudTab:'HUD',mrTab:'Modrinth',instTab:'Zainstalowane',inst:'Zainstaluj',installed:'Zainstalowano',searchMods:'Szukaj modów na Modrinth',noMods:'Brak modów.',menuKey:'W grze: Prawy Shift otwiera menu modułów.',vtext:'Tekst wersji w menu gry',folder:'Folder gry',modsFolder:'Otwórz folder modów',loader:'Silnik',search:'Szukaj wersji',fabricNote:'Fabric: wrzuć pliki .jar do folderu modów. Od 1.14 Fabric, starsze wersje (1.8.9, 1.12.2...) przez Legacy Fabric.',vanilla:'Vanilla',hud:'Moduły HUD',bindHint:'Kliknij przycisk i naciśnij klawisz',logs:'Logi',noLogs:'Brak logów.',javaBad:'Wymagana Java ',javaNone:'Nie znaleziono Javy. Zainstaluj Javę ',javaFound:'Masz Javę ',active:'Aktywne',logout:'Usuń',partnerText:'Oficjalny partner Core Client. Wspólne serwery, eventy i kosmetyki.',started:'Gra zamknięta',pick:'Wybierz wersję'},
+en:{msLogin:'Sign in with Microsoft',offline:'Play offline',nick:'Offline nickname',saved:'Saved accounts',discord:'Join our Discord',play:'PLAY',versions:'Versions',mods:'Mods',binds:'Keybinds',settings:'Settings',partners:'Partners',partnerTag:'PARTNER',view:'View',quit:'QUIT',accounts:'Accounts',addMs:'Add Microsoft account',addOff:'Add offline account',ram:'Memory (RAM)',full:'Fullscreen',jvm:'JVM arguments',hide:'Hide launcher while playing',dlink:'Discord link',servers:'Servers',add:'Add',join:'Join',noSrv:'Add a server to join it in one click.',toProfile:'Switch account',news:'Latest news',lastProfiles:'Last played profiles',manage:'Manage all profiles',addMods:'Add mods',yourSrv:'Your servers',manageSrv:'Manage servers',n1t:'Modrinth and modules menu',n2t:'Core Performance Update 1',tagL:'LAUNCHER',tagC:'CLIENT',hudTab:'HUD',mrTab:'Modrinth',instTab:'Installed',inst:'Install',installed:'Installed',searchMods:'Search mods on Modrinth',noMods:'No mods.',menuKey:'In game: Right Shift opens the modules menu.',vtext:'Version text in game menu',folder:'Game folder',modsFolder:'Open mods folder',loader:'Loader',search:'Search versions',fabricNote:'Fabric: put .jar files in the mods folder. Fabric from 1.14, older versions (1.8.9, 1.12.2...) via Legacy Fabric.',vanilla:'Vanilla',hud:'HUD modules',bindHint:'Click a button and press a key',logs:'Logs',noLogs:'No logs yet.',javaBad:'Java required: ',javaNone:'Java not found. Install Java ',javaFound:'You have Java ',active:'Active',logout:'Remove',partnerText:'Official Core Client partner. Shared servers, events and cosmetics.',started:'Game closed',pick:'Pick a version'}};
 let modTab='hud',mrq='',mrBusy=false;
 let ST=null,list=[],logs=[],busy=false,wait=null,cur=null,q='';
 const t=k=>(L[ST?ST.settings.lang:'pl']||L.pl)[k]||k;
@@ -145,13 +185,26 @@ function render(){
   const logged=!!active();
   $('#login').classList.toggle('on',!logged);$('#home').classList.toggle('on',logged);
   $('#laccs').innerHTML=ST.accounts.length?`<h4>${t('saved')}</h4>`+accList():'';
-  if(logged){const a=active();$('#me').innerHTML=av(a.name)+esc(a.name.toUpperCase());
-    const s=ST.settings;$('#pinfo').textContent=(s.version||'—')+' · '+(s.loader==='fabric'?'Fabric':'Vanilla');
-    $('#ver').textContent='Core Client 0.4.0 ('+(s.version||'—')+')';$('#dlink').textContent=s.discord.replace('https://','');}
-  $('#play').disabled=busy;
+  if(logged)renderHome();
+  document.querySelectorAll('.pl,#sideplay').forEach(b=>b.disabled=busy);
 }
 async function run(f){try{ST=await f();render();return true}catch(e){const m=String(e.message||e).replace(/^Error invoking remote method '[^']+': (Error: )?/,'');($('#login').classList.contains('on')?$('#lerr').textContent=m:toast(m));return false}}
 
+function ago(ts){const m=Math.floor((Date.now()-ts)/60000);if(m<60)return Math.max(m,1)+' min';const x=Math.floor(m/60);return x<24?x+' h':Math.floor(x/24)+' d'}
+function histList(){const s=ST.settings;return(s.history&&s.history.length?s.history:[{version:s.version,loader:s.loader}]).slice(0,3)}
+let sceneDone=false;
+function drawScene(){if(sceneDone)return;sceneDone=true;const g=$('#scene').getContext('2d');const sk=g.createLinearGradient(0,0,0,50);sk.addColorStop(0,'#f2a6c0');sk.addColorStop(.6,'#ffd9a8');sk.addColorStop(1,'#fff0c8');g.fillStyle=sk;g.fillRect(0,0,160,72);g.fillStyle='rgba(255,255,255,.75)';g.fillRect(38,18,8,8);
+ for(let x=0;x<160;x++){const y=48+Math.round(Math.sin(x/7)*2+Math.sin(x/3));g.fillStyle='#7fae2a';g.fillRect(x,y,1,2);g.fillStyle='#8a5a34';g.fillRect(x,y+2,1,30);if(x%23===5){g.fillStyle='#6b4a22';g.fillRect(x,y-10,2,10);g.fillStyle='#9bbf30';g.fillRect(x-4,y-18,10,9)}}}
+function renderHome(){
+ const a=active(),s=ST.settings;drawScene();
+ $('#ver').textContent='Core Client 0.5.0';$('#dlink').textContent=s.discord.replace('https://','');
+ $('#nt').innerHTML=esc(a.name)+`<small>→ ${t('toProfile')}</small>`;
+ const sk=$('#skin'),u='https://mc-heads.net/body/'+encodeURIComponent(a.name)+'/260';if(sk.dataset.u!==u){sk.dataset.u=u;sk.style.display='';sk.src=u}
+ $('#me').innerHTML=av(a.name)+`<span class="n">${esc(a.name)}</span><span>▾</span>`;
+ $('#profiles').innerHTML=histList().map((p,i)=>{const l=p.loader==='fabric'?'Fabric':'Vanilla';return `<div class="prof ${i?'':'hl'}"><div class="pic">C</div><div class="pi"><b>Core ${l} ${esc(p.version)}</b><small>${l} ${esc(p.version)}${p.ts?' · '+ago(p.ts):''}</small></div><button class="pl" data-play="${i}">▶ ${t('play')}</button><button class="gear" data-w="settings">⚙</button></div>`}).join('');
+ const sv=s.servers||[];$('#sc').textContent=sv.length;
+ $('#sl').innerHTML=sv.length?sv.map((x,i)=>`<div class="srv"><div class="si">▦</div><div><b>${esc(x.ip)}</b></div><button class="k" data-join="${i}">▶ ${t('join')}</button></div>`).join(''):`<p class="mu">${t('noSrv')}</p>`;
+}
 /* login */
 $('#lms').onclick=()=>run(core.loginMs);
 $('#loff').onclick=async()=>{$('#lerr').textContent='';if(await run(()=>core.loginOffline($('#lnick').value)))$('#lnick').value=''};
@@ -183,9 +236,11 @@ async function body(n){const s=ST.settings;let h='';
   <button class="btn" id="addacc" style="margin:4px 0 8px">${t('addMs')}</button>
   <button class="btn" data-open="root" style="background:var(--l)">${t('folder')}</button>`}
  if(n==='partners'){h=`<div class="row"><div><b>Depresja Client</b><small>${t('partnerText')}</small></div><span style="font-size:22px">★</span></div>`}
+ if(n==='servers'){h=`<div class="row"><input type="text" id="sa" placeholder="adres.serwera.pl:25565" style="flex:1"><button class="k" id="sadd">${t('add')}</button></div>`+(s.servers||[]).map((x,i)=>`<div class="row"><b>${esc(x.ip)}</b><button class="k" data-rs="${i}">×</button></div>`).join('')}
  if(n==='logs'){h=`<pre>${logs.length?esc(logs.slice(-300).join('\n')):t('noLogs')}</pre>`}
  $('#body').innerHTML=h;
  if(n==='versions'){const i=$('#q');i.oninput=()=>{q=i.value;const p=i.selectionStart;body('versions').then(()=>{const j=$('#q');j.focus();j.setSelectionRange(p,p)})}}
+ if(n==='servers'){$('#sadd').onclick=async()=>{const v=$('#sa').value.trim();if(!v)return;await set({servers:[...(ST.settings.servers||[]),{ip:v}]});render();body('servers')}}
  if(n==='mods'&&modTab==='mr'){
   const go=async()=>{if(mrBusy)return;mrBusy=true;$('#mres').innerHTML='<p style="color:var(--mu)">...</p>';
    try{const r=await core.mrSearch(mrq);$('#mres').innerHTML=r.length?r.map(x=>`<div class="mr"><img src="${esc(x.icon||'')}" alt="" onerror="this.style.visibility='hidden'"><div><b>${esc(x.title)}</b><small>${esc(x.desc)}</small><small>${esc(x.author)} · ${(x.downloads/1000).toFixed(0)}k</small></div><button class="k" data-mi="${esc(x.id)}">${t('inst')}</button></div>`).join(''):`<p style="color:var(--mu)">${t('noMods')}</p>`}
@@ -210,6 +265,10 @@ document.addEventListener('click',async e=>{
  if(b=g('data-ld')){await set({loader:b.dataset.ld});render();body('versions');return}
  if(b=g('data-mod')){await set({mods:{...ST.settings.mods,[b.dataset.mod]:b.checked}});return}
  if(b=g('data-bind')){wait=b.dataset.bind;body('binds');return}
+ if(b=g('data-am')){modTab='mr';openPanel('mods');return}
+ if(b=g('data-play')){startGame(null,histList()[+b.dataset.play]);return}
+ if(b=g('data-join')){startGame(ST.settings.servers[+b.dataset.join].ip);return}
+ if(b=g('data-rs')){await set({servers:ST.settings.servers.filter((_,i)=>i!==+b.dataset.rs)});render();body('servers');return}
  if(b=g('data-mt')){modTab=b.dataset.mt;body('mods');return}
  if(b=g('data-mi')){b.disabled=true;b.textContent='...';try{await core.mrInstall(b.dataset.mi);b.textContent=t('installed')}catch(err){b.disabled=false;b.textContent=t('inst');toast(clean(err))}return}
  if(b=g('data-mrm')){await core.modsRemove(b.dataset.mrm);body('mods');return}
@@ -223,13 +282,14 @@ $('#me').onclick=()=>openPanel('settings');
 $('#quit').onclick=()=>window.close();
 
 /* play */
-$('#play').onclick=async()=>{
+async function startGame(server,prof){
+ if(busy)return;
+ if(prof)await set({version:prof.version,loader:prof.loader});
  const s=ST.settings;if(!s.version){toast(t('pick'));openPanel('versions');return}
- const j=await core.java(s.version);
- if(!j.ok){toast(j.found?t('javaBad')+j.need+' ('+t('javaFound')+j.found+')':t('javaNone')+j.need);return}
  busy=true;render();$('#bar').classList.add('on');$('#bt').textContent='...';$('#bp').style.width='5%';
- try{await core.launch()}catch(e){busy=false;$('#bar').classList.remove('on');render();toast(String(e.message).replace(/^Error invoking remote method '[^']+': (Error: )?/,''))}
-};
+ try{await core.launch(server||null)}catch(e){busy=false;$('#bar').classList.remove('on');render();toast(clean(e))}
+}
+$('#sideplay').onclick=()=>startGame();
 core.on('status',m=>{$('#bt').textContent=m});
 core.on('progress',p=>{if(p.total)$('#bp').style.width=Math.max(5,Math.round(p.task/p.total*100))+'%'});
 core.on('log',d=>{logs.push(String(d).trim());if(logs.length>1000)logs.shift();if(cur==='logs')body('logs')});
